@@ -14,5 +14,7 @@ public interface IProductDao {
     public boolean deleteProduct(int id) throws SQLException;
 
     public boolean updateProduct(Product product) throws SQLException;
+    
+    public List<Product> selectAllProducts(int page, int limit);
 
 }

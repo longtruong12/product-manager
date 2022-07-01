@@ -26,9 +26,9 @@
             <th>Price</th>
             <th>Category</th>
         </tr>
-        <c:forEach var="product" items="${listProduct}">
+        <c:forEach var="product" items="${listProduct}" varStatus="count">
             <tr>
-                <td><c:out value="${product.id}"/></td>
+                <td><c:out value="${count.index+1}"/></td>
                 <td><c:out value="${product.name}"/></td>
                 <td><c:out value="${product.description}"/></td>
                 <td><c:out value="${product.price}"/></td>
@@ -43,12 +43,9 @@
     
     <div class="pagination">
   <a href="#">«</a>
-  <a href="#">1</a>
-  <a class="active" href="#">2</a>
-  <a href="#">3</a>
-  <a href="#">4</a>
-  <a href="#">5</a>
-  <a href="#">6</a>
+  <c:forEach var="i" begin="1" end="${paging }">
+  		 <a href="${pageContext.request.contextPath}/products?page=${i}"><c:out value="${i}"></c:out></a>
+  </c:forEach>
   <a href="#">»</a>
 </div>
 </div>

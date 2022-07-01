@@ -8,6 +8,8 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -87,8 +89,19 @@ public class ProductServlet extends HttpServlet {
     private void listProduct(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         List<Product> listProduct = productDAO.selectAllProducts();
-        request.setAttribute("listProduct", listProduct);
-        request.setAttribute("listCategory", listCategory);
+        int page = 1;
+        if(request.getParameter("page") != null)
+            page = Integer.parseInt(request.getParameter("page"));//1: 0,1,2 - 2:3,4,5 - 3:6,7,8 - 4:9
+        int limitPage = 3;
+        float pagingCount = (float) listProduct.size() / limitPage;
+        int paging = (int) ((pagingCount<1) ? 1 : ((pagingCount > Math.round(pagingCount)) ? (Math.round(pagingCount)+1) : Math.round(pagingCount)));
+//        if(page > limitPage) {
+//        	limitPage = page - limitPage;
+//        	page = 0;
+//        }
+        List<Product> listProductByPaging = productDAO.selectAllProducts(page, limitPage);
+        request.setAttribute("listProduct", listProductByPaging);
+        request.setAttribute("paging", paging);
         RequestDispatcher dispatcher = request.getRequestDispatcher("product/list.jsp");
         dispatcher.forward(request, response);
     }
@@ -118,6 +131,8 @@ public class ProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         Product newProduct = new Product(name, description, price, category);
         productDAO.insertProduct(newProduct);
+        
+        request.setAttribute("listCategory", listCategory);
         RequestDispatcher dispatcher = request.getRequestDispatcher("product/create.jsp");
         dispatcher.forward(request, response);
     }
@@ -131,7 +146,11 @@ public class ProductServlet extends HttpServlet {
         String category = request.getParameter("category");
         Product book = new Product(id, name, description, price, category);
         productDAO.updateProduct(book);
-        RequestDispatcher dispatcher = request.getRequestDispatcher("product/edit.jsp");
+        
+        List<Product> listProduct = productDAO.selectAllProducts();
+        request.setAttribute("listProduct", listProduct);
+        request.setAttribute("listCategory", listCategory);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("product/list.jsp");
         dispatcher.forward(request, response);
     }
 
@@ -144,6 +163,34 @@ public class ProductServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("product/list.jsp");
         dispatcher.forward(request, response);
     }
-
     
+    public static <T extends Object> List<T[]> splitArray(T[] array, int max){
+
+    	  int x = array.length / max;
+    	  int r = (array.length % max); // remainder
+
+    	  int lower = 0;
+    	  int upper = 0;
+
+    	  List<T[]> list = new ArrayList<T[]>();
+
+    	  int i=0;
+
+    	  for(i=0; i<x; i++){
+
+    	    upper += max;
+
+    	    list.add(Arrays.copyOfRange(array, lower, upper));
+
+    	    lower = upper;
+    	  }
+
+    	  if(r > 0){
+
+    	    list.add(Arrays.copyOfRange(array, lower, (lower + r)));
+
+    	  }
+
+    	  return list;
+    	}
 }

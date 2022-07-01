@@ -28,24 +28,22 @@
                 <th>Product Name:</th>
                 <td>
                     <input type="text" name="name" size="45"
-                           value="<c:out value='${product.name}' required/>"
-                    />
+                           value="<c:out value="${product.name}"/>" required/>
                 </td>
             </tr>
             <tr>
                 <th>Product Description:</th>
                 <td>
                     <input type="text" name="description" size="45"
-                           value="<c:out value='${product.description}' />"
-                    />
+                           value="<c:out value="${product.description}"/>" required/>
                 </td>
             </tr>
             <tr>
                 <th>Product Price:</th>
                 <td>
-                    <input type="number" name="price" size="45"
-                           value="<c:out value='${product.price}' required/>"
-                    />
+                    <input type="number" name="price" min="0"
+                           value="<c:out value="${product.price}"/>" required/>
+                    
                 </td>
             </tr>
             <tr>
