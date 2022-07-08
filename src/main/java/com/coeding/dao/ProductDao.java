@@ -9,14 +9,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-
-public class ProductDao implements IProductDao {
-
-	private String jdbcURL = "jdbc:mysql://localhost:3306/demo?useUnicode=yes&characterEncoding=UTF-8";
-    private String jdbcUsername = "root";
-    private String jdbcPassword = null;
+public class ProductDao extends Dao implements IProductDao {
 
     private static final String INSERT_PRODUCTS_SQL = "INSERT INTO products" + "  (name, description, price, category) VALUES " +
             " (?, ?, ?, ?);";
@@ -27,21 +20,6 @@ public class ProductDao implements IProductDao {
     private static final String UPDATE_PRODUCTS_SQL = "update products set name = ?,description= ?, price= ?, category= ? where id = ?;";
 
     public ProductDao() {}
-
-    protected Connection getConnection() {
-        Connection connection = null;
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(jdbcURL, jdbcUsername, jdbcPassword);
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        return connection;
-    }
     
 	@Override
 	public void insertProduct(Product product) throws SQLException {

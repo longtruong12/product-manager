@@ -92,7 +92,7 @@ public class ProductServlet extends HttpServlet {
         int page = 1;
         if(request.getParameter("page") != null)
             page = Integer.parseInt(request.getParameter("page"));//1: 0,1,2 - 2:3,4,5 - 3:6,7,8 - 4:9
-        int limitPage = 3;
+        int limitPage = 5;
         float pagingCount = (float) listProduct.size() / limitPage;
         int paging = (int) ((pagingCount<1) ? 1 : ((pagingCount > Math.round(pagingCount)) ? (Math.round(pagingCount)+1) : Math.round(pagingCount)));
 //        if(page > limitPage) {
@@ -163,34 +163,4 @@ public class ProductServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("product/list.jsp");
         dispatcher.forward(request, response);
     }
-    
-    public static <T extends Object> List<T[]> splitArray(T[] array, int max){
-
-    	  int x = array.length / max;
-    	  int r = (array.length % max); // remainder
-
-    	  int lower = 0;
-    	  int upper = 0;
-
-    	  List<T[]> list = new ArrayList<T[]>();
-
-    	  int i=0;
-
-    	  for(i=0; i<x; i++){
-
-    	    upper += max;
-
-    	    list.add(Arrays.copyOfRange(array, lower, upper));
-
-    	    lower = upper;
-    	  }
-
-    	  if(r > 0){
-
-    	    list.add(Arrays.copyOfRange(array, lower, (lower + r)));
-
-    	  }
-
-    	  return list;
-    	}
 }
